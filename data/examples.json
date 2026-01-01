@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "evidence_type": "Model reference predictions; not recorded native calculations or rendered measurements",
+  "description": "Illustrative public inputs for the recovered Terminal 2.15 (488.9) formula and portable RGB/Lab conversion. No live profile or machine settings are recorded.",
+  "cases": [
+    {"foreground": "#0000B2", "background": "#FFFFFF", "expected": "#5230E1"},
+    {"foreground": "#0000B2", "background": "#000000", "expected": "#5230E1"},
+    {"foreground": "#0000B2", "background": "#1E1E1E", "expected": "#6A42F6"}
+  ]
+}

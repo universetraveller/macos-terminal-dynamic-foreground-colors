@@ -1,0 +1,41 @@
+{
+  "target_terminal_version": "2.15",
+  "target_terminal_build": "488.9",
+  "evidence_scope": "Static inspection and sampled scalar interpretation; no captured user session or native rendering measurements.",
+  "analysis_environment": "Non-macOS; Apple native frameworks were not executed.",
+  "static_scalar_check": {
+    "arm64_slices": 2,
+    "input_pairs_per_slice": 10005,
+    "total_checks": 20010,
+    "mismatches": 0,
+    "llvm_version": "19.1.7",
+    "data": "evidence/build_check.json"
+  },
+  "reference_predictions": {
+    "cases": 3,
+    "portable_mismatches": 0,
+    "data": "data/examples.json",
+    "evidence_type": "Model reference predictions, not recorded native calculations or pixels"
+  },
+  "unittest": {
+    "total": 12,
+    "passed": 11,
+    "skipped": 1,
+    "skip_reason": "Native ColorSync requires macOS"
+  },
+  "native_colorsync_observations_bundled": 0,
+  "rendered_measurements_bundled": 0,
+  "distribution": {
+    "apple_executables_bundled": false,
+    "apple_disassembly_bundled": false,
+    "copied_application_instruction_sequences_bundled": false,
+    "previous_build_data_bundled": false,
+    "recorded_user_session_bundled": false,
+    "git_root_commits": 1,
+    "parent_commits": 0,
+    "old_git_objects_included": false,
+    "generic_commit_identity": true,
+    "fixed_packaging_timestamps": true,
+    "legal_clearance_claimed": false
+  }
+}

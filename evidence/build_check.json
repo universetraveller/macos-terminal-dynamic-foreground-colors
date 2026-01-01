@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "build": {
+    "metadata": {
+      "size_bytes": 2470176,
+      "sha256": "abcdb6863771b0c6768d81aa7ce20e6e161c905cbc8665db9b8441380ff6805a",
+      "image_base": "0x100000000",
+      "slices": [
+        {
+          "index": 0,
+          "cpu_type": "0x100000c",
+          "cpu_subtype": "0x80000002",
+          "size_bytes": 1225056,
+          "sha256": "a7499e0147cf5b7dd962e333544857e9cc6976d23e6d3a2eb9224fe54e2169d1",
+          "uuid_hex": "fd0e46a59b61360099965ccf75fe9db6",
+          "adjustment_method_address": "0x100024d9c",
+          "file_offset": "0x4000"
+        },
+        {
+          "index": 1,
+          "cpu_type": "0x100000c",
+          "cpu_subtype": "0x8000000c",
+          "size_bytes": 1224992,
+          "sha256": "d7ac1cae03a88e08251d31584e815e3e27ef8d45a7d5eea595ce6d3f54ee8d9a",
+          "uuid_hex": "0ce108c731123e8b82ff611127c568b0",
+          "adjustment_method_address": "0x1000242a8",
+          "file_offset": "0x130000"
+        }
+      ],
+      "terminal_short_version": "2.15",
+      "terminal_build": "488.9",
+      "minimum_os_from_info_plist": "27.2",
+      "sdk_version_from_info_plist": "27.2",
+      "sdk_build_from_info_plist": "26B106"
+    },
+    "checks": [
+      {
+        "slice_index": 0,
+        "core": {
+          "method_address": "0x100024d9c",
+          "size_bytes": 1132,
+          "instruction_count": 283
+        },
+        "ordinary_lightness": {
+          "entry_address": "0x10002510c",
+          "sample_count": 10005,
+          "random_seed": 0,
+          "mismatches": 0,
+          "scope": "Interpreted scalar block; no ColorSync, AppKit, or pixel test."
+        }
+      },
+      {
+        "slice_index": 1,
+        "core": {
+          "method_address": "0x1000242a8",
+          "size_bytes": 1132,
+          "instruction_count": 283
+        },
+        "ordinary_lightness": {
+          "entry_address": "0x100024618",
+          "sample_count": 10005,
+          "random_seed": 0,
+          "mismatches": 0,
+          "scope": "Interpreted scalar block; no ColorSync, AppKit, or pixel test."
+        }
+      }
+    ]
+  },
+  "limits": "Sampled scalar interpretation; no live ColorSync, AppKit, or rendering measurement."
+}

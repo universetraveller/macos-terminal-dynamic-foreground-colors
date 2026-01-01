@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+/local-evidence/
+/private-inputs/
+local-probe*
+/Terminal
+/Terminal.app/
+/Info.plist
+*.zip
+*.dylib
+*.arm64.txt
