@@ -148,19 +148,24 @@ public ColorSync APIs and returned `#5230E1` on white and black, and `#6A42F6` o
 `#1E1E1E`, for foreground `#0000B2`. These are native model-calculation results,
 not sampled Terminal pixels or direct calls to its private adjustment method.
 
-The full unittest suite ran 12 tests: **9 passed and 3 failed**, with none
-skipped. The native ColorSync test passed. All three failures were strict PTY
-restoration comparisons: macOS set `PENDIN` (`0x20000000`) after the saved
-settings were reapplied. A standalone `tty.setraw()`/`termios.tcsetattr()`
-experiment reproduced that difference without using the probe.
+The full unittest suite passed **all 12 tests**, with none skipped, after the
+restoration assertions were adjusted to allow only macOS's managed `PENDIN` bit
+in the local flags. Every other terminal setting is still compared. The initial
+run had 9 passes and 3 failures from strict PTY restoration comparisons: macOS
+set `PENDIN` (`0x20000000`) after the saved settings were reapplied. A standalone
+`tty.setraw()`/`termios.tcsetattr()` experiment reproduced that difference without
+using the probe. The native ColorSync test passed in both runs.
 
-The live probe could not open `/dev/tty` because the automation session had no
-controlling terminal. No live palette or automated rendering measurement was
-collected. The maintainer reports manual visual verification on the same Mac:
-directory names in a colorized listing (`ls -G`) look slightly
-purple in the Basic profile with Dynamic foreground colors enabled, although
-the profile's ANSI entry is pure blue. This is qualitative visual evidence;
-no measured glyph RGB or screenshot is included.
+The live probe could not open `/dev/tty` in the automation session because it
+had no controlling terminal. The maintainer ran `python3 terminal_color_probe.py`
+in a local Terminal.app session and used a digital color picker set to
+**Display in sRGB** to verify the rendered named-ANSI foreground swatches in
+**section D**. **All sixteen swatches
+(slots 0–15) matched** their corresponding **on CURRENT** predictions in section B.
+This is a maintainer-reported rendering check, separate from the automated native
+ColorSync calculations. Individual RGB readings were not supplied; the
+repository records the method, sRGB display setting, and match results
+without a raw measurement transcript, live palette dump, or screenshot.
 
 The [local verification notes](local-verification.md#recorded-local-mac-verification)
 and [device results](../evidence/device-verification.json) record the scope,

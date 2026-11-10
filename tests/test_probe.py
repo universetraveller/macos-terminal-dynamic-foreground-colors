@@ -1,4 +1,5 @@
 import os
+import sys
 import threading
 import unittest
 from unittest import mock
@@ -45,6 +46,15 @@ class TerminalCleanup(unittest.TestCase):
         self.assertEqual(path, '/dev/tty')
         return os.fdopen(os.dup(self.slave), 'r+b', buffering=0)
 
+    def assert_terminal_restored(self):
+        restored = termios.tcgetattr(self.slave)
+        original = self.original.copy()
+        if sys.platform == 'darwin':
+            # macOS sets PENDIN when restoring canonical input mode.
+            restored[3] &= ~termios.PENDIN
+            original[3] &= ~termios.PENDIN
+        self.assertEqual(restored, original)
+
     def test_fragmented_query_and_tty_restore(self):
         reply = b''.join(f'\x1b]4;{i};rgb:0000/0000/ffff\x07'.encode()
                          for i in range(16))
@@ -71,17 +81,17 @@ class TerminalCleanup(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(len(values), 18)
         self.assertEqual(values['bg'], (1, 1, 1))
-        self.assertEqual(termios.tcgetattr(self.slave), self.original)
+        self.assert_terminal_restored()
 
     def test_tty_restore_after_timeout(self):
         self.assertEqual(probe.query_palette(timeout=.02), {})
-        self.assertEqual(termios.tcgetattr(self.slave), self.original)
+        self.assert_terminal_restored()
 
     def test_tty_restore_after_read_error(self):
         with mock.patch.object(probe.select, 'select', side_effect=OSError('simulated')):
             with self.assertRaises(OSError):
                 probe.query_palette(timeout=.02)
-        self.assertEqual(termios.tcgetattr(self.slave), self.original)
+        self.assert_terminal_restored()
 
 
 if __name__ == '__main__':

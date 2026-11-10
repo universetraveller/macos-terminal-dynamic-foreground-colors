@@ -1,7 +1,7 @@
 {
   "target_terminal_version": "2.15",
   "target_terminal_build": "488.9",
-  "evidence_scope": "Static inspection and sampled scalar interpretation, plus real-device portable/native ColorSync checks and a maintainer-reported qualitative visual check; no captured user session or measured glyph pixels.",
+  "evidence_scope": "Static inspection and sampled scalar interpretation, plus real-device portable/native ColorSync checks and maintainer-reported digital-color-picker verification: all sixteen rendered section D swatches matched on CURRENT predictions. No raw picker readings or user-session transcript bundled.",
   "analysis_environment": "Initial static analysis: non-macOS. Subsequent verification: local Mac; public ColorSync APIs executed. Hardware details and exact runtime versions omitted.",
   "static_scalar_check": {
     "arm64_slices": 2,
@@ -32,16 +32,36 @@
     "native_mismatches": 0,
     "unittest": {
       "total": 12,
-      "passed": 9,
-      "failed": 3,
+      "passed": 12,
+      "failed": 0,
       "skipped": 0,
-      "failure_reason": "Three strict PTY restoration assertions differed by macOS PENDIN (0x20000000); reproduced independently with tty.setraw and termios.tcsetattr."
+      "assertion_adjustment": "Only macOS PENDIN is masked in restoration comparisons; all other terminal settings are still checked.",
+      "initial_result": {
+        "total": 12,
+        "passed": 9,
+        "failed": 3,
+        "skipped": 0,
+        "failure_reason": "Three strict PTY restoration assertions differed by macOS PENDIN (0x20000000); reproduced independently with tty.setraw and termios.tcsetattr."
+      }
     },
-    "live_palette_probe": "Unavailable: automation session has no controlling terminal (/dev/tty).",
-    "manual_visual_check": "Maintainer-reported on a local Mac; qualitative, no measured glyph RGB."
+    "live_palette_probe": "Automation could not access /dev/tty. Maintainer ran the probe in a local Terminal.app session and verified section D using a digital color picker.",
+    "manual_rendering_check": {
+      "source": "Maintainer report",
+      "method": "Digital color picker",
+      "section": "D",
+      "comparison": "Section B, corresponding slot's on CURRENT prediction",
+      "swatches_checked": 16,
+      "matches": 16,
+      "mismatches": 0,
+      "measurement_color_space": "sRGB",
+      "picker_display_setting": "Display in sRGB",
+      "individual_rgb_readings_bundled": false
+    }
   },
   "native_colorsync_observations_bundled": 3,
-  "rendered_measurements_bundled": 0,
+  "rendered_swatch_match_results_bundled": 16,
+  "individual_rendered_rgb_readings_bundled": 0,
+  "rendered_measurement_scope": "Sixteen rendered swatches reported checked with a digital color picker set to Display in sRGB, all matched; zero individual RGB readings bundled.",
   "distribution": {
     "apple_executables_bundled": false,
     "apple_disassembly_bundled": false,

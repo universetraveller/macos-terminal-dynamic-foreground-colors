@@ -47,6 +47,15 @@ Version information identifies which system performed a new reproduction.
 Review the local palette/settings in any output before choosing what to publish.
 A screenshot alone does not establish which color space or pipeline was sampled.
 
+For the rendering check, use a local Terminal.app session with Dynamic
+foreground colors enabled. Compare each **section D** swatch, labeled 0 through
+15, with the same slot's **on CURRENT** prediction in section B. Sample a solid
+interior region of each block, and record the picker's color-space setting and
+the expected and observed RGB values. If an automated session cannot access
+Terminal, a person can run this step locally and report the results. A shared
+summary can contain slot numbers, match results, and measurement method without
+including machine details or a full probe transcript.
+
 ## Recorded local Mac verification
 
 The following checks ran on a local Mac. The installed Terminal
@@ -65,8 +74,9 @@ or session transcript is included.
 |---|---|
 | `python3 verify.py` | 3 reference cases, 0 mismatches |
 | `python3 verify.py --engine native` | 3 reference cases, 0 mismatches; installed public ColorSync APIs executed |
-| `python3 -m unittest discover -s tests -v` | 12 tests run: 9 passed, 3 failed, none skipped |
-| `python3 terminal_color_probe.py` | Could not open `/dev/tty`: no controlling terminal was configured for the automation session |
+| `python3 -m unittest discover -s tests -v` | After the macOS assertion adjustment: 12 tests run, all passed, none skipped |
+| `python3 terminal_color_probe.py` (automation) | Could not open `/dev/tty`: no controlling terminal was configured for the automation session |
+| `python3 terminal_color_probe.py` (maintainer's local Terminal.app session) | All 16 section D swatches checked with a digital color picker set to **Display in sRGB**; all matched section B's corresponding **on CURRENT** predictions |
 
 The native ColorSync calculations returned these eight-bit RGB values:
 
@@ -76,27 +86,34 @@ The native ColorSync calculations returned these eight-bit RGB values:
 | `#0000B2` | `#000000` | `#5230E1` | `#5230E1` |
 | `#0000B2` | `#1E1E1E` | `#6A42F6` | `#6A42F6` |
 
-The three failures were the PTY cleanup assertions after a successful query,
-a timeout, and a simulated read error. In each case the restored local flags
+Before the assertion adjustment, 9 tests passed and 3 failed. The failures were
+the PTY cleanup assertions after a successful query, a timeout, and a simulated
+read error. In each case the restored local flags
 differed by `PENDIN` (`0x20000000`). A separate PTY experiment using only
 `tty.setraw()` and `termios.tcsetattr()` reproduced that flag change. These
-failures are recorded as failures; the native ColorSync test passed.
+initial failures are retained in the evidence; the native ColorSync test passed.
 
 [Apple's tty implementation](https://github.com/apple-oss-distributions/xnu/blob/main/bsd/kern/tty.c#L1313-L1345)
-sets `PENDIN` when canonical input mode is restored. Together with the standalone
-reproduction, this indicates that the strict test comparison needs a macOS-specific
-allowance for that bit. No machine settings need to change. A test fix should
-allow only the `PENDIN` difference on macOS and continue checking all other
-terminal settings, including echo and canonical mode.
+sets `PENDIN` when canonical input mode is restored. The test assertions now
+ignore only that bit in the local flags on macOS and continue comparing every
+other terminal setting. No machine settings or probe behavior changed. The
+rerun passed all 12 tests. Separate checks that deliberately changed `ECHO` and
+`ICANON` confirmed that the restoration assertion still rejects those changes.
 
-The maintainer also reports manual visual verification on this device: with the
-Basic profile and Dynamic foreground colors enabled, folder names in `ls -G`
-look slightly purple despite the profile's pure-blue ANSI entry. This is a
-qualitative observation, without captured glyph RGB or a measurement color
-space. The automated native check validates the modeled conversion path for
-the three inputs above; it does not invoke Terminal's private adjustment method
-or measure its rendering. The live palette and swatch procedure still needs a
-local Terminal.app session.
+The maintainer completed the rendering check in a local Terminal.app session
+using a digital color picker set to **Display in sRGB** on **section D** of
+`python3 terminal_color_probe.py`.
+All sixteen swatches (slots 0–15) matched the corresponding **on CURRENT**
+predictions in section B. This is a maintainer-reported check of the rendered
+colors, with picker readings displayed in sRGB, separate from the automated
+native ColorSync calculations. Individual RGB readings were not supplied, so the repository
+records the method, color-space setting, and match results without a numeric
+measurement transcript.
+
+The automated native check validates the modeled conversion path for the three
+reference inputs above; it does not invoke Terminal's private adjustment method
+or measure its rendering. The automation session's lack of a controlling
+terminal did not prevent the maintainer from completing the live swatch check.
 
 ## Optional local executable inspection
 

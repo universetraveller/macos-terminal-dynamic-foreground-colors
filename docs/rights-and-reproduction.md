@@ -4,7 +4,8 @@
 
 This repository contains newly written project code and prose, a mathematical
 explanation, model reference cases, numeric scalar-check and native ColorSync
-verification results, verification scope, and factual application-build
+verification results, a reported color-picker check of rendered swatches,
+verification scope, and factual application-build
 identifiers. It does not bundle Apple executables, frameworks,
 SDK headers, source-code extracts, decompiler output, disassembly dumps, or
 copied application instruction sequences. The single root commit contains only

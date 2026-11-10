@@ -10,7 +10,6 @@ the configured color and a reference background, without rewriting the palette.
 For example, open Terminal.app with the **Basic** profile and Dynamic foreground
 colors enabled, then run `ls -G` in a directory containing folders. The folder
 names look slightly purple, even though the profile's ANSI blue is pure blue.
-The maintainer manually verified this appearance on a local Mac.
 
 Other terminal apps offer a minimum-contrast adjustment; for example,
 [iTerm2's Minimum Contrast](https://iterm2.com/documentation-preferences-profiles-colors.html)
@@ -49,10 +48,15 @@ reply path were also examined. See the [report](docs/report.md) and
 
 On a local Mac, the installed executable matched the documented hash,
 and portable and native ColorSync verification each passed all three reference
-cases. The full suite passed 9 of 12 tests; three PTY restoration assertions
-failed on a changed macOS `PENDIN` flag. The live palette probe could not access
-a controlling terminal in the automation session. The maintainer's manual
-visual check is qualitative; no rendered-pixel measurements are included. See
+cases. The full suite passed all 12 tests after the PTY restoration assertions
+were adjusted to allow macOS's managed `PENDIN` bit. The live palette probe could
+not access a controlling terminal in the automation session.
+
+In a local Terminal.app session, the maintainer used a digital color picker set
+to **Display in sRGB** to verify all sixteen named-ANSI foreground swatches in
+**section D** of
+`python3 terminal_color_probe.py`. **All matched** the corresponding **on CURRENT**
+predictions. Individual RGB readings were not supplied. See
 the [device verification](docs/local-verification.md#recorded-local-mac-verification).
 No captured user session, live palette, profile export, or previous-build history
 is included.

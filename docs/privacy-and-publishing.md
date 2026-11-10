@@ -10,7 +10,9 @@ Public content is limited to original code/prose, generic model examples, and
 Terminal 2.15 (488.9) build identifiers, scalar-check results, and real-device
 verification results. The device notes disclose only that verification ran on
 a local Mac, the studied Terminal build, three native ColorSync calculations,
-test results, and a maintainer-reported qualitative visual check. Hardware
+test results, and a maintainer-reported digital-color-picker check of section D
+of the live probe using **Display in sRGB**: all sixteen swatches matched their
+predictions. Individual picker readings were not supplied. Hardware
 model, chip, process architecture, exact runtime OS/build and Python version,
 serial number, hardware UUID, captured palette, profile export, session
 date/timezone, account name, home path, hostname, IP address, credential, and

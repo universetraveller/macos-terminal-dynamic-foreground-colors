@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "evidence_type": "Real-device model verification through portable math and public ColorSync APIs; maintainer-reported qualitative visual check; no measured glyph pixels",
+  "evidence_type": "Real-device model verification through portable math and public ColorSync APIs, plus maintainer-reported digital-color-picker verification of all sixteen rendered section D swatches; individual picker readings not supplied",
   "environment": {
     "platform": "macOS",
     "privacy": "Hardware details and exact runtime OS/build and Python versions omitted",
@@ -24,30 +24,58 @@
   },
   "unittest": {
     "command": "python3 -m unittest discover -s tests -v",
+    "source": "Automated rerun after the macOS restoration assertion adjustment",
     "total": 12,
-    "passed": 9,
-    "failed": 3,
+    "passed": 12,
+    "failed": 0,
     "skipped": 0,
     "native_colorsync_test_passed": true,
-    "failed_tests": [
-      "test_probe.TerminalCleanup.test_fragmented_query_and_tty_restore",
-      "test_probe.TerminalCleanup.test_tty_restore_after_read_error",
-      "test_probe.TerminalCleanup.test_tty_restore_after_timeout"
-    ],
-    "observed_flag_difference": "PENDIN (0x20000000)",
-    "independent_reproduction": "A fresh PTY, tty.setraw(), and termios.tcsetattr() reapplying saved settings produced the same PENDIN difference without the probe."
+    "failed_tests": [],
+    "assertion_adjustment": "Only PENDIN is masked in local flags on macOS; all other terminal settings are compared unchanged.",
+    "restoration_guard_checks": "Deliberately changing ECHO or ICANON on a PTY still caused the restoration assertion to fail.",
+    "initial_result": {
+      "source": "Original automated run and maintainer-provided results before the assertion adjustment",
+      "total": 12,
+      "passed": 9,
+      "failed": 3,
+      "skipped": 0,
+      "failed_tests": [
+        "test_probe.TerminalCleanup.test_fragmented_query_and_tty_restore",
+        "test_probe.TerminalCleanup.test_tty_restore_after_read_error",
+        "test_probe.TerminalCleanup.test_tty_restore_after_timeout"
+      ],
+      "observed_flag_difference": "PENDIN (0x20000000)",
+      "independent_reproduction": "A fresh PTY, tty.setraw(), and termios.tcsetattr() reapplying saved settings produced the same PENDIN difference without the probe."
+    }
   },
   "live_probe": {
     "command": "python3 terminal_color_probe.py",
-    "completed": false,
-    "reason": "No controlling terminal: opening /dev/tty returned Device not configured after retrying outside the sandbox.",
-    "live_palette_collected": false,
-    "rendered_pixels_measured": false
+    "automation": {
+      "completed": false,
+      "reason": "No controlling terminal: opening /dev/tty returned Device not configured after retrying outside the sandbox.",
+      "live_palette_collected": false,
+      "rendered_pixels_measured": false
+    },
+    "maintainer_local_session": {
+      "completed": true,
+      "rendered_swatches_checked_with_color_picker": 16,
+      "matches": 16,
+      "details": "manual_rendering_check"
+    }
   },
-  "manual_visual_check": {
+  "manual_rendering_check": {
     "source": "Maintainer report",
     "device": "Local Mac",
-    "description": "In Terminal.app with the Basic profile and Dynamic foreground colors enabled, folder names in a colorized directory listing look slightly purple despite the profile's pure-blue ANSI entry.",
-    "scope": "Qualitative visual verification; no measured glyph RGB, screenshot, or session transcript included"
+    "command": "python3 terminal_color_probe.py",
+    "section": "D. Named-ANSI foreground swatches on the current background",
+    "method": "Digital color picker",
+    "comparison": "Section B, corresponding slot's on CURRENT prediction",
+    "slots_checked": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "matches": 16,
+    "mismatches": 0,
+    "measurement_color_space": "sRGB",
+    "picker_display_setting": "Display in sRGB",
+    "individual_rgb_readings": null,
+    "scope": "Maintainer reports all sixteen rendered swatches matched their predictions with the picker set to Display in sRGB. Individual RGB readings were not supplied; no screenshot, palette dump, or session transcript included."
   }
 }
