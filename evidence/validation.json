@@ -1,8 +1,8 @@
 {
   "target_terminal_version": "2.15",
   "target_terminal_build": "488.9",
-  "evidence_scope": "Static inspection and sampled scalar interpretation; no captured user session or native rendering measurements.",
-  "analysis_environment": "Non-macOS; Apple native frameworks were not executed.",
+  "evidence_scope": "Static inspection and sampled scalar interpretation, plus real-device portable/native ColorSync checks and a maintainer-reported qualitative visual check; no captured user session or measured glyph pixels.",
+  "analysis_environment": "Initial static analysis: non-macOS. Subsequent verification: local Mac; public ColorSync APIs executed. Hardware details and exact runtime versions omitted.",
   "static_scalar_check": {
     "arm64_slices": 2,
     "input_pairs_per_slice": 10005,
@@ -18,12 +18,29 @@
     "evidence_type": "Model reference predictions, not recorded native calculations or pixels"
   },
   "unittest": {
+    "environment": "Original non-macOS validation",
     "total": 12,
     "passed": 11,
     "skipped": 1,
     "skip_reason": "Native ColorSync requires macOS"
   },
-  "native_colorsync_observations_bundled": 0,
+  "real_device_verification": {
+    "data": "evidence/device-verification.json",
+    "portable_cases": 3,
+    "portable_mismatches": 0,
+    "native_cases": 3,
+    "native_mismatches": 0,
+    "unittest": {
+      "total": 12,
+      "passed": 9,
+      "failed": 3,
+      "skipped": 0,
+      "failure_reason": "Three strict PTY restoration assertions differed by macOS PENDIN (0x20000000); reproduced independently with tty.setraw and termios.tcsetattr."
+    },
+    "live_palette_probe": "Unavailable: automation session has no controlling terminal (/dev/tty).",
+    "manual_visual_check": "Maintainer-reported on a local Mac; qualitative, no measured glyph RGB."
+  },
+  "native_colorsync_observations_bundled": 3,
   "rendered_measurements_bundled": 0,
   "distribution": {
     "apple_executables_bundled": false,

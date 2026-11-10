@@ -53,11 +53,19 @@ Minimum OS and SDK values do not establish an actual runtime OS version.
 Application UUIDs, CPU subtypes, file offsets, and slice hashes are retained in
 [build_check.json](../evidence/build_check.json). These identifiers describe
 application slices; no hardware UUID, local profile, or user account is recorded.
+The separate real-device verification below omits hardware details and exact
+runtime OS and Python versions.
 
 ## Formula
 
-Let $f=L^*_{\mathrm{foreground}}/100$ and
-$b=L^*_{\mathrm{background}}/100$. The ordinary path computes
+Normalize the foreground and reference-background Lab lightness:
+
+```math
+f = \frac{L^*_{\mathrm{foreground}}}{100},\qquad
+b = \frac{L^*_{\mathrm{background}}}{100}.
+```
+
+The ordinary path computes
 
 ```math
 t = 0.2 + 0.8 f,\qquad
@@ -73,7 +81,13 @@ remain unchanged, and Terminal preserves input alpha when constructing the
 result. The additional `force` branch is outside this formula.
 
 For a completely white or black reference background, the expression reduces
-to $f'=0.2+0.8f$. An intermediate background produces a different result.
+to:
+
+```math
+f' = 0.2 + 0.8f.
+```
+
+An intermediate background produces a different result.
 These remapping operations are in Terminal; ColorSync performs the conversions.
 
 ## Conversion sequence and precision
@@ -118,9 +132,40 @@ The relevant callers and conversion setup were also inspected: the profile
 switch, current-background reference, ordinary `force=false` argument, separate
 indexed/direct-RGB routes, Device RGB wrapper, and sixteen-bit OSC formatting.
 
-These checks do not run Terminal, AppKit, or ColorSync and do not sample glyph
-pixels. No recorded native ColorSync session or rendered measurements are
-included for the target build. See [validation.json](../evidence/validation.json).
+These static checks do not run Terminal, AppKit, or ColorSync and do not sample
+glyph pixels. Native ColorSync was exercised separately on the real device
+described below. See [validation.json](../evidence/validation.json).
+
+## Real-device verification
+
+Verification ran on a local Mac. Hardware details and exact runtime OS and
+Python versions are omitted. The installed **Terminal 2.15 (488.9)** executable
+matched the SHA-256 listed above.
+
+Both `python3 verify.py` and `python3 verify.py --engine native` checked all three
+reference inputs with **zero mismatches**. The native run called the installed
+public ColorSync APIs and returned `#5230E1` on white and black, and `#6A42F6` on
+`#1E1E1E`, for foreground `#0000B2`. These are native model-calculation results,
+not sampled Terminal pixels or direct calls to its private adjustment method.
+
+The full unittest suite ran 12 tests: **9 passed and 3 failed**, with none
+skipped. The native ColorSync test passed. All three failures were strict PTY
+restoration comparisons: macOS set `PENDIN` (`0x20000000`) after the saved
+settings were reapplied. A standalone `tty.setraw()`/`termios.tcsetattr()`
+experiment reproduced that difference without using the probe.
+
+The live probe could not open `/dev/tty` because the automation session had no
+controlling terminal. No live palette or automated rendering measurement was
+collected. The maintainer reports manual visual verification on the same Mac:
+directory names in a colorized listing (`ls -G`) look slightly
+purple in the Basic profile with Dynamic foreground colors enabled, although
+the profile's ANSI entry is pure blue. This is qualitative visual evidence;
+no measured glyph RGB or screenshot is included.
+
+The [local verification notes](local-verification.md#recorded-local-mac-verification)
+and [device results](../evidence/device-verification.json) record the scope,
+commands, outputs, and limits. Agreement on these three cases does not establish
+universal equivalence between the portable converter and ColorSync.
 
 ## Reference predictions and reproduction
 

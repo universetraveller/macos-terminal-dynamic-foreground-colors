@@ -7,10 +7,15 @@ The repository is a fresh, latest-build-only release with **one root commit on
 objects, or old session recordings.
 
 Public content is limited to original code/prose, generic model examples, and
-Terminal 2.15 (488.9) build identifiers and scalar-check results. No captured
-palette, profile export, actual runtime OS version, session date/timezone,
-account name, home path, hostname, IP address, credential, or remote URL is
-bundled. Reference colors in `data/examples.json` are explicit illustrative
+Terminal 2.15 (488.9) build identifiers, scalar-check results, and real-device
+verification results. The device notes disclose only that verification ran on
+a local Mac, the studied Terminal build, three native ColorSync calculations,
+test results, and a maintainer-reported qualitative visual check. Hardware
+model, chip, process architecture, exact runtime OS/build and Python version,
+serial number, hardware UUID, captured palette, profile export, session
+date/timezone, account name, home path, hostname, IP address, credential, and
+personal remote URL are omitted. No raw session transcript or screenshot is
+included. Reference colors in `data/examples.json` remain explicit illustrative
 inputs, not a record of a local profile.
 
 The executable hash, Mach-O slice UUIDs, CPU subtypes, and SDK/minimum-OS values

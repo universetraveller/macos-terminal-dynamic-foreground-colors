@@ -3,8 +3,9 @@
 ## What is distributed
 
 This repository contains newly written project code and prose, a mathematical
-explanation, model reference cases, numeric scalar-check results, and factual
-application-build identifiers. It does not bundle Apple executables, frameworks,
+explanation, model reference cases, numeric scalar-check and native ColorSync
+verification results, verification scope, and factual application-build
+identifiers. It does not bundle Apple executables, frameworks,
 SDK headers, source-code extracts, decompiler output, disassembly dumps, or
 copied application instruction sequences. The single root commit contains only
 this release material; previous Git objects are not included.

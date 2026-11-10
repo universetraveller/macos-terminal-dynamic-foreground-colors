@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "evidence_type": "Real-device model verification through portable math and public ColorSync APIs; maintainer-reported qualitative visual check; no measured glyph pixels",
+  "environment": {
+    "platform": "macOS",
+    "privacy": "Hardware details and exact runtime OS/build and Python versions omitted",
+    "terminal_version": "2.15",
+    "terminal_build": "488.9",
+    "terminal_executable_sha256": "abcdb6863771b0c6768d81aa7ce20e6e161c905cbc8665db9b8441380ff6805a",
+    "matches_static_target": true
+  },
+  "reference_checks": {
+    "portable_command": "python3 verify.py",
+    "native_command": "python3 verify.py --engine native",
+    "cases_per_engine": 3,
+    "portable_mismatches": 0,
+    "native_mismatches": 0,
+    "results": [
+      {"foreground": "#0000B2", "background": "#FFFFFF", "portable": "#5230E1", "native_colorsync": "#5230E1"},
+      {"foreground": "#0000B2", "background": "#000000", "portable": "#5230E1", "native_colorsync": "#5230E1"},
+      {"foreground": "#0000B2", "background": "#1E1E1E", "portable": "#6A42F6", "native_colorsync": "#6A42F6"}
+    ],
+    "scope": "Modeled formula with installed public ColorSync APIs; no private Terminal adjustment-method call or rendering measurement"
+  },
+  "unittest": {
+    "command": "python3 -m unittest discover -s tests -v",
+    "total": 12,
+    "passed": 9,
+    "failed": 3,
+    "skipped": 0,
+    "native_colorsync_test_passed": true,
+    "failed_tests": [
+      "test_probe.TerminalCleanup.test_fragmented_query_and_tty_restore",
+      "test_probe.TerminalCleanup.test_tty_restore_after_read_error",
+      "test_probe.TerminalCleanup.test_tty_restore_after_timeout"
+    ],
+    "observed_flag_difference": "PENDIN (0x20000000)",
+    "independent_reproduction": "A fresh PTY, tty.setraw(), and termios.tcsetattr() reapplying saved settings produced the same PENDIN difference without the probe."
+  },
+  "live_probe": {
+    "command": "python3 terminal_color_probe.py",
+    "completed": false,
+    "reason": "No controlling terminal: opening /dev/tty returned Device not configured after retrying outside the sandbox.",
+    "live_palette_collected": false,
+    "rendered_pixels_measured": false
+  },
+  "manual_visual_check": {
+    "source": "Maintainer report",
+    "device": "Local Mac",
+    "description": "In Terminal.app with the Basic profile and Dynamic foreground colors enabled, folder names in a colorized directory listing look slightly purple despite the profile's pure-blue ANSI entry.",
+    "scope": "Qualitative visual verification; no measured glyph RGB, screenshot, or session transcript included"
+  }
+}

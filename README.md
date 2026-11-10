@@ -7,6 +7,18 @@ from its named ANSI palette. A program can request the profile's blue while the
 text is drawn with a different RGB value. Terminal derives that foreground from
 the configured color and a reference background, without rewriting the palette.
 
+For example, open Terminal.app with the **Basic** profile and Dynamic foreground
+colors enabled, then run `ls -G` in a directory containing folders. The folder
+names look slightly purple, even though the profile's ANSI blue is pure blue.
+The maintainer manually verified this appearance on a local Mac.
+
+Other terminal apps offer a minimum-contrast adjustment; for example,
+[iTerm2's Minimum Contrast](https://iterm2.com/documentation-preferences-profiles-colors.html)
+shifts text colors toward black or white when they are too similar to the
+background. Terminal's inspected path remaps lightness without testing a
+minimum contrast threshold. That difference makes its mechanism worth
+investigating and explains why copying a palette alone can miss its appearance.
+
 The ordinary path converts foreground and background to Lab, remaps foreground
 lightness, preserves the two Lab chromatic components, and converts back. This
 produces background-dependent colors. The portable reproduction predicts:
@@ -27,7 +39,7 @@ a WCAG contrast ratio or test a minimum contrast threshold.
 
 This single-commit repository concerns **Terminal.app 2.15 (488.9)** only.
 Its Info.plist lists a minimum OS and SDK version of **27.2**; that is application
-build metadata, not a recorded runtime OS version.
+build metadata, not a disclosed runtime OS version.
 
 Both ARM64 slices were inspected. Interpreting the ordinary lightness block on
 **10,005 input pairs per slice** produced **20,010 checks with zero mismatches**.
@@ -35,9 +47,15 @@ The profile switch, reference-background handling, conversion setup, and OSC
 reply path were also examined. See the [report](docs/report.md) and
 [static check results](evidence/build_check.json).
 
-Native ColorSync and rendered pixels have not been freshly measured for this
-build in the included evidence. The repository contains no captured user session,
-live palette, profile export, or previous-build history.
+On a local Mac, the installed executable matched the documented hash,
+and portable and native ColorSync verification each passed all three reference
+cases. The full suite passed 9 of 12 tests; three PTY restoration assertions
+failed on a changed macOS `PENDIN` flag. The live palette probe could not access
+a controlling terminal in the automation session. The maintainer's manual
+visual check is qualitative; no rendered-pixel measurements are included. See
+the [device verification](docs/local-verification.md#recorded-local-mac-verification).
+No captured user session, live palette, profile export, or previous-build history
+is included.
 
 ## Formula
 
@@ -99,6 +117,7 @@ bundling software extracts. The standard reproduction needs no binary inspection
 | `tools/inspect_terminal.py` | Optional local Mach-O inspection |
 | `evidence/build_check.json` | Target-build identifiers and scalar check results |
 | `evidence/validation.json` | Validation scope and counts |
+| `evidence/device-verification.json` | Local Mac verification results |
 | `docs/report.md` | Technical explanation, findings, and limitations |
 | `docs/privacy-and-publishing.md` | Privacy audit scope and publishing instructions |
 
@@ -107,6 +126,8 @@ bundling software extracts. The standard reproduction needs no binary inspection
 The archive has one new root commit, a generic author identity, and normalized
 packaging timestamps. It contains no recorded local profiles, account names,
 home paths, hostnames, IP addresses, credentials, remote URLs, or old Git objects.
+The device verification records test results on macOS. Hardware details and
+exact runtime OS and Python versions are omitted.
 Build hashes and Mach-O UUIDs identify the application being studied; they are
 not the Mac's hardware UUID. See [privacy and publishing](docs/privacy-and-publishing.md).
 
